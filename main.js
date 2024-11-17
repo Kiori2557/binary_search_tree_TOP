@@ -14,5 +14,6 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
   }
 };
-mango.insert(45);
+mango.insert(4.5);
+mango.deleteItem(4.5);
 prettyPrint(mango.root);
