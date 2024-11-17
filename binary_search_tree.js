@@ -19,4 +19,20 @@ export class Tree {
     tmp.right = this.#buildTree(array, mid + 1, end);
     return tmp;
   }
+  insert(value) {
+    let pointer = this.root;
+    while (value < pointer.data || value > pointer.data) {
+      if (value < pointer.data) {
+        if (!pointer.left) {
+          return (pointer.left = new Node(value));
+        }
+        pointer = pointer.left;
+      } else if (value > pointer.data) {
+        if (!pointer.right) {
+          return (pointer.right = new Node(value));
+        }
+        pointer = pointer.right;
+      }
+    }
+  }
 }
