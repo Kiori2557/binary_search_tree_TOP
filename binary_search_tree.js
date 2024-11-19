@@ -58,24 +58,40 @@ export class Tree {
     return nodeObj.pointerNode;
   }
   deleteItem(value) {
-    let parentNode = this.#traverseTree(value).parent;
-    let pointerNode = this.#traverseTree(value).pointerNode;
+    let { parent, pointerNode } = this.#traverseTree(value);
     if (pointerNode) {
+      //in case the node have no child
       if (this.#isLeafNode(pointerNode)) {
-        this.#assignNode(parentNode, pointerNode, null);
+        this.#assignNode(parent, pointerNode, null); //delete the node by setting it to null
       } else {
+        //in case the node have 2 child
         if (pointerNode.left && pointerNode.right) {
           let tmpNode = pointerNode.right;
           while (tmpNode.left !== null) tmpNode = tmpNode.left;
           this.deleteItem(tmpNode.data);
           tmpNode.left = pointerNode.left;
-          this.#assignNode(parentNode, pointerNode, tmpNode);
-        } else if (pointerNode.left) {
-          this.#assignNode(parentNode, pointerNode, pointerNode.left);
+          this.#assignNode(parent, pointerNode, tmpNode);
+        } //in case the node only 1 child
+        else if (pointerNode.left) {
+          this.#assignNode(parent, pointerNode, pointerNode.left);
         } else if (pointerNode.right) {
-          this.#assignNode(parentNode, pointerNode, pointerNode.right);
+          this.#assignNode(parent, pointerNode, pointerNode.right);
         }
       }
+    }
+  }
+  levelOrder(callback) {
+    if (!callback)
+      throw new Error("call back function is required as parameter");
+    let pointerNode = this.root;
+    let queue = [];
+    queue.push(pointerNode);
+    while (queue.length !== 0) {
+      if (pointerNode.left) queue.push(pointerNode.left);
+      if (pointerNode.right) queue.push(pointerNode.right);
+      queue.shift();
+      callback(pointerNode);
+      pointerNode = queue[0];
     }
   }
 }
