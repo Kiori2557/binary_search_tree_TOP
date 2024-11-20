@@ -94,4 +94,28 @@ export class Tree {
       pointerNode = queue[0];
     }
   }
+  preOrder(callback, pointerNode = this.root) {
+    if (pointerNode === null) return;
+    if (!callback)
+      throw new Error("call back function is required as parameter");
+    callback(pointerNode);
+    this.preOrder(callback, pointerNode.left);
+    this.preOrder(callback, pointerNode.right);
+  }
+  inOrder(callback, pointerNode = this.root) {
+    if (pointerNode === null) return;
+    if (!callback)
+      throw new Error("call back function is required as parameter");
+    this.inOrder(callback, pointerNode.left);
+    callback(pointerNode);
+    this.inOrder(callback, pointerNode.right);
+  }
+  postOrder(callback, pointerNode = this.root) {
+    if (pointerNode === null) return;
+    if (!callback)
+      throw new Error("call back function is required as parameter");
+    this.postOrder(callback, pointerNode.left);
+    this.postOrder(callback, pointerNode.right);
+    callback(pointerNode);
+  }
 }

@@ -15,6 +15,6 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 // mango.insert(4.5);
-mango.levelOrder((node) => console.log(node));
+mango.postOrder((node) => console.log(node.data));
 // mango.deleteItem(67);
 prettyPrint(mango.root);
