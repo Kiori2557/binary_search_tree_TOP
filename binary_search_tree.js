@@ -20,10 +20,11 @@ export class Tree {
     return tmp;
   }
   #traverseTree(value) {
-    let nodeObj = { parent: null, pointerNode: null };
+    let nodeObj = { parent: null, pointerNode: null, depth: 0 };
     let pointer = this.root;
     while (pointer && value !== pointer.data) {
       nodeObj.parent = pointer;
+      nodeObj.depth++;
       pointer = value < pointer.data ? pointer.left : pointer.right;
       nodeObj.pointerNode = pointer;
     }
@@ -117,5 +118,19 @@ export class Tree {
     this.postOrder(callback, pointerNode.left);
     this.postOrder(callback, pointerNode.right);
     callback(pointerNode);
+  }
+  height(node) {
+    let nodeDepth = this.getDepth(node);
+    let treeDepth = 0;
+    this.levelOrder((node) => {
+      if (this.#isLeafNode(node) && this.getDepth(node.data) > treeDepth) {
+        treeDepth = this.getDepth(node.data);
+      }
+      return treeDepth;
+    });
+    return treeDepth - nodeDepth;
+  }
+  getDepth(node) {
+    return this.#traverseTree(node).depth;
   }
 }

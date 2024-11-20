@@ -14,7 +14,7 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
   }
 };
-// mango.insert(4.5);
-mango.postOrder((node) => console.log(node.data));
-// mango.deleteItem(67);
+mango.insert(4.5);
+// mango.postOrder((node) => console.log(node.data));
+console.log(mango.height(6345));
 prettyPrint(mango.root);
