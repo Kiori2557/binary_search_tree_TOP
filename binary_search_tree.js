@@ -39,6 +39,7 @@ export class Tree {
     else parentNode.right = newNode;
   }
   insert(value) {
+    this.rebalance();
     let pointer = this.root;
     while (value < pointer.data || value > pointer.data) {
       if (value < pointer.data) {
@@ -59,6 +60,7 @@ export class Tree {
     return nodeObj.pointerNode;
   }
   deleteItem(value) {
+    this.rebalance();
     let { parent, pointerNode } = this.#traverseTree(value);
     if (pointerNode) {
       //in case the node have no child
@@ -81,10 +83,9 @@ export class Tree {
       }
     }
   }
-  levelOrder(callback) {
+  levelOrder(callback, pointerNode = this.root) {
     if (!callback)
       throw new Error("call back function is required as parameter");
-    let pointerNode = this.root;
     let queue = [];
     queue.push(pointerNode);
     while (queue.length !== 0) {
@@ -119,7 +120,7 @@ export class Tree {
     this.postOrder(callback, pointerNode.right);
     callback(pointerNode);
   }
-  height(node) {
+  height(node, root = this.root) {
     let nodeDepth = this.getDepth(node);
     let treeDepth = 0;
     this.levelOrder((node) => {
@@ -127,10 +128,32 @@ export class Tree {
         treeDepth = this.getDepth(node.data);
       }
       return treeDepth;
-    });
+    }, root);
     return treeDepth - nodeDepth;
   }
   getDepth(node) {
     return this.#traverseTree(node).depth;
+  }
+  isBalanced() {
+    let leftSubTreeHeight = this.height(this.root.left.data, this.root.left);
+    let rightSubTreeHeight = this.height(this.root.right.data, this.root.right);
+    let isBalanced = false;
+
+    isBalanced =
+      leftSubTreeHeight === rightSubTreeHeight ||
+      leftSubTreeHeight - 1 === rightSubTreeHeight ||
+      leftSubTreeHeight === rightSubTreeHeight - 1
+        ? true
+        : false;
+    return isBalanced;
+  }
+  rebalance() {
+    if (!this.isBalanced()) {
+      let array = [];
+      this.inOrder((node) => {
+        array.push(node.data);
+      });
+      this.root = this.#buildTree(array, 0, array.length - 1);
+    }
   }
 }

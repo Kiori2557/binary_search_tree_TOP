@@ -15,6 +15,11 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 mango.insert(4.5);
-// mango.postOrder((node) => console.log(node.data));
-console.log(mango.height(6345));
+mango.insert(3.5);
+mango.insert(3.25);
+
+mango.inOrder((node) => console.log(node.data));
+prettyPrint(mango.root);
+mango.rebalance();
+// console.log(mango.isBalanced());
 prettyPrint(mango.root);
