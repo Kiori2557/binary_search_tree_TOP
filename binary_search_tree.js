@@ -38,22 +38,20 @@ export class Tree {
     if (pointerNode.data < parentNode.data) parentNode.left = newNode;
     else parentNode.right = newNode;
   }
-  insert(value) {
+  insert(value, pointer = this.root) {
     this.rebalance();
-    let pointer = this.root;
-    while (value < pointer.data || value > pointer.data) {
-      if (value < pointer.data) {
-        if (!pointer.left) {
-          return (pointer.left = new Node(value));
-        }
-        pointer = pointer.left;
-      } else if (value > pointer.data) {
-        if (!pointer.right) {
-          return (pointer.right = new Node(value));
-        }
-        pointer = pointer.right;
-      }
+
+    if (pointer === null) {
+      pointer = new Node(value);
     }
+
+    if (value < pointer.data) {
+      pointer.left = this.insert(value, pointer.left);
+    } else if (value > pointer.data) {
+      pointer.right = this.insert(value, pointer.right);
+    }
+
+    return pointer;
   }
   find(value) {
     let nodeObj = this.#traverseTree(value);
@@ -62,26 +60,28 @@ export class Tree {
   deleteItem(value) {
     this.rebalance();
     let { parent, pointerNode } = this.#traverseTree(value);
+    let tmpNode = null;
     if (pointerNode) {
       //in case the node have no child
       if (this.#isLeafNode(pointerNode)) {
-        this.#assignNode(parent, pointerNode, null); //delete the node by setting it to null
+        //delete the node by setting it to null
+        tmpNode = null;
       } else {
         //in case the node have 2 child
         if (pointerNode.left && pointerNode.right) {
-          let tmpNode = pointerNode.right;
+          tmpNode = pointerNode.right;
           while (tmpNode.left !== null) tmpNode = tmpNode.left;
           this.deleteItem(tmpNode.data);
           tmpNode.left = pointerNode.left;
-          this.#assignNode(parent, pointerNode, tmpNode);
         } //in case the node only 1 child
         else if (pointerNode.left) {
-          this.#assignNode(parent, pointerNode, pointerNode.left);
+          tmpNode = pointerNode.left;
         } else if (pointerNode.right) {
-          this.#assignNode(parent, pointerNode, pointerNode.right);
+          tmpNode = pointerNode.right;
         }
       }
     }
+    this.#assignNode(parent, pointerNode, tmpNode);
   }
   levelOrder(callback, pointerNode = this.root) {
     if (!callback)
