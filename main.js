@@ -1,7 +1,15 @@
 import { Tree } from "./binary_search_tree.js";
-let arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
+
+let arr = [];
+generateRandomNumber(25, arr);
 let mango = new Tree(arr);
 
+function generateRandomNumber(count, arr) {
+  for (let i = 0; i < count; i++) {
+    arr.push(Math.floor(Math.random() * 100));
+  }
+  return arr;
+}
 const prettyPrint = (node, prefix = "", isLeft = true) => {
   if (node === null) {
     return;
@@ -14,12 +22,5 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
   }
 };
-mango.insert(4.5);
-mango.insert(3.5);
-mango.insert(3.25);
 
-mango.inOrder((node) => console.log(node.data));
-prettyPrint(mango.root);
-mango.rebalance();
-// console.log(mango.isBalanced());
 prettyPrint(mango.root);
