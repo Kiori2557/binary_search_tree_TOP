@@ -24,6 +24,11 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 
-prettyPrint(mango.root);
 mango.deleteItem(67);
+mango.deleteItem(324);
+console.log(mango.isBalanced());
+mango.deleteItem(9);
+console.log(mango.isBalanced());
+mango.deleteItem(23);
+console.log(mango.isBalanced());
 prettyPrint(mango.root);

@@ -11,6 +11,7 @@ export class Tree {
     array = orderArray(array);
     this.root = this.#buildTree(array, 0, array.length - 1);
   }
+
   #buildTree(array, start, end) {
     if (start > end) return null;
     let mid = Math.floor((start + end) / 2);
@@ -19,6 +20,7 @@ export class Tree {
     tmp.right = this.#buildTree(array, mid + 1, end);
     return tmp;
   }
+
   #traverseTree(value) {
     let nodeObj = { parent: null, pointerNode: null, depth: 0 };
     let pointer = this.root;
@@ -30,14 +32,17 @@ export class Tree {
     }
     return nodeObj;
   }
+
   #isLeafNode(node) {
     if (node.left === null && node.right === null) return true;
     else return false;
   }
+
   #assignNode(parentNode, pointerNode, newNode) {
     if (pointerNode.data < parentNode.data) parentNode.left = newNode;
     else parentNode.right = newNode;
   }
+
   insert(value, pointer = this.root) {
     this.rebalance();
 
@@ -53,10 +58,12 @@ export class Tree {
 
     return pointer;
   }
+
   find(value) {
     let nodeObj = this.#traverseTree(value);
     return nodeObj.pointerNode;
   }
+
   deleteItem(value) {
     this.rebalance();
     let { parent, pointerNode } = this.#traverseTree(value);
@@ -83,6 +90,7 @@ export class Tree {
     }
     this.#assignNode(parent, pointerNode, tmpNode);
   }
+
   levelOrder(callback, pointerNode = this.root) {
     if (!callback)
       throw new Error("call back function is required as parameter");
@@ -96,6 +104,7 @@ export class Tree {
       pointerNode = queue[0];
     }
   }
+
   preOrder(callback, pointerNode = this.root) {
     if (pointerNode === null) return;
     if (!callback)
@@ -104,6 +113,7 @@ export class Tree {
     this.preOrder(callback, pointerNode.left);
     this.preOrder(callback, pointerNode.right);
   }
+
   inOrder(callback, pointerNode = this.root) {
     if (pointerNode === null) return;
     if (!callback)
@@ -112,6 +122,7 @@ export class Tree {
     callback(pointerNode);
     this.inOrder(callback, pointerNode.right);
   }
+
   postOrder(callback, pointerNode = this.root) {
     if (pointerNode === null) return;
     if (!callback)
@@ -120,6 +131,11 @@ export class Tree {
     this.postOrder(callback, pointerNode.right);
     callback(pointerNode);
   }
+
+  getDepth(node) {
+    return this.#traverseTree(node).depth;
+  }
+
   height(node, root = this.root) {
     let nodeDepth = this.getDepth(node);
     let treeDepth = 0;
@@ -131,22 +147,14 @@ export class Tree {
     }, root);
     return treeDepth - nodeDepth;
   }
-  getDepth(node) {
-    return this.#traverseTree(node).depth;
-  }
+
   isBalanced() {
     let leftSubTreeHeight = this.height(this.root.left.data, this.root.left);
     let rightSubTreeHeight = this.height(this.root.right.data, this.root.right);
-    let isBalanced = false;
-
-    isBalanced =
-      leftSubTreeHeight === rightSubTreeHeight ||
-      leftSubTreeHeight - 1 === rightSubTreeHeight ||
-      leftSubTreeHeight === rightSubTreeHeight - 1
-        ? true
-        : false;
-    return isBalanced;
+    let dif = Math.abs(leftSubTreeHeight - rightSubTreeHeight);
+    return dif < 2 ? true : false;
   }
+
   rebalance() {
     if (!this.isBalanced()) {
       let array = [];
